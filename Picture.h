@@ -1,0 +1,76 @@
+#pragma once
+#include <iostream>
+#include <vector>
+#include <fstream>
+
+using namespace std;
+
+#pragma pack(push, 1)
+struct BMP {
+    int8_t id[2];// Завжди дві літери 'B' і 'M'
+    int32_t filesize;        // Розмір файла в байтах!!!!!!!!!!!!!!!!!!!!!!
+    int32_t reserved;     // 0, 0
+    int32_t headersize;      // 54L для 24-бітних зображень
+    int32_t infoSize;        // 40L для 24-бітних зображень
+    int32_t width;           // ширина зображення в пікселях!!!!!!!!!!!!!!!!!!!!!!
+    int32_t depth;           // висота зображення в пікселях!!!!!!!!!!!!!!!!!!!!!!)))
+    int16_t biPlanes;        // 1 (для 24-бітних зображень)
+    int16_t bits;            // 24 (для 24-бітних зображень)
+    int32_t biCompression;   // 0L
+    int32_t biSizeImage;     // Можна поставити в 0L для зображень без компрессії (наш варіант)
+    int32_t biXPelsPerMeter; // Рекомендована кількість пікселів на метр, можна 0L
+    int32_t biYPelsPerMeter; // Те саме, по висоті
+    int32_t biClrUsed;       // Для індексованих зображень, можна поставити 0L
+    int32_t biClrImportant;  // Те саме
+    BMP() {
+        id[0] = 'B';
+        id[1] = 'M';
+        reserved = 0;
+        infoSize = 40;
+        biPlanes = 1;
+        bits = 24;
+        biCompression = 0;
+        biYPelsPerMeter = 2834;
+        biClrUsed = 0;
+        biClrImportant = 0;
+    }
+};
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+struct PIXEL {
+    unsigned char B;
+    unsigned char G;
+    unsigned char R;
+};
+#pragma pack(pop)
+
+void printToPicture(vector<vector<char>>& matrix) {
+    int width = matrix[0].size(), depth = matrix.size();
+    BMP header;
+
+    ofstream out("out.bmp", ios::binary);
+
+    char str[10] = {};
+    int padding = (4 - width * sizeof(PIXEL) % 4) % 4;
+    out.seekp(0, ios_base::beg);
+
+    header.filesize = sizeof(BMP) + sizeof(PIXEL) * header.width * header.depth + padding * header.depth;
+    header.width = width;
+    header.depth = depth;
+    header.headersize = sizeof(BMP);
+
+    out.write((char*)&header, sizeof(BMP));
+
+    for (int i = 0; i < depth; i++) {
+        for (int j = 0; j < width; j++) {
+            PIXEL pixel;
+            pixel.R = int(double(matrix[i][j]) * double(255));
+            pixel.G = int(double(matrix[i][j]) * double(255));
+            pixel.B = int(double(matrix[i][j]) * double(255));
+            out.write((char*)&(pixel), sizeof(PIXEL));
+        }
+        out.write(str, padding);
+    }
+    out.close();
+}
