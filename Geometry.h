@@ -22,7 +22,6 @@ public:
 	virtual bool interSect(Line line, Point& ptOfCrossing) = 0;
 };
 
-
 class Vector {
 public:	
 	double x, y, z;
@@ -180,7 +179,7 @@ void Shield::trace(vector<Triangle>& trVec, Point camera) {
 				cnt++;
 				double cosA = (line.a * totSamyi.plane.normal) / (line.a.length() * totSamyi.plane.normal.length());
 				cosA = fabs(cosA);
-				m[i][j] = pixels[int(cosA * 6)];
+				m[i][j] = int(cosA);//pixels[int(cosA * 6)];
 			}
 		}
 	}
@@ -231,7 +230,7 @@ public:
 
 	}
 
-	void extendByTriangle() {
+	void extendByTriangle(Triangle tr) {
 
 	}
 };
