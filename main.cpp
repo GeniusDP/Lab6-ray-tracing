@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <vector>
-#include "Geometry.h"
+//#include "Geometry.h"
+#include "Shield.h"
 #include "Parser.h"
 #include <filesystem>
 #include "Picture.h"

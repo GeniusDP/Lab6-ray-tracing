@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include "Geometry.h"
+#include "Parallelepiped.h"
 
 using namespace std;
 
@@ -9,7 +9,7 @@ struct Node {
 	Parallelepiped parallelepiped;
 	vector<Node*> children;
 	Triangle triangle;
-	Node() {}
+	Node(): triangle(Triangle({ 0, 0 }, { 0, 0 }, { 0, 0 })) {}
 };
 
 class RTree {
@@ -21,6 +21,9 @@ public:
 		root->parallelepiped = Parallelepiped(origin, width, length, height);
 		maxDepth = 3;
 		buildTree(root);
+	}
+	Node* getRoot() {
+		return root;
 	}
 	void buildTree(Node* node, int d = 1) {
 		double newWidth = node->parallelepiped.getX().x / 2,
@@ -79,7 +82,7 @@ public:
 			removeNode(node->children[i]);
 		delete node;
 	}
-	void traceRay(Node* node, Line line, vector< Triangle& >& result) {
+	void traceRay(Node* node, Line line, vector< Triangle >& result) {
 		if (node->children.size() > 0) {
 			if (node->parallelepiped.intersectWithLine(line)) {
 				for (int i = 0; i < node->children.size(); i++) {
