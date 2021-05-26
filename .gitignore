@@ -2,3 +2,12 @@
 /RayTracing.vcxproj
 /RayTracing.vcxproj.filters
 /RayTracing.vcxproj.user
+.vs
+Debug
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+Release
+*.txt
+*.bmp

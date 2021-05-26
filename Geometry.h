@@ -225,12 +225,45 @@ public:
 
 
 class Parallelepiped {
-
+	Point origin;
+	Vector X, Y, Z;
+	
 public:
-	Parallelepiped() {
-
+	Parallelepiped(Point origin, double width, double length, double height):origin(origin) {
+		X.x = width;
+		X.y = 0;
+		X.z = 0;
+		Y.x = 0;
+		Y.y = length;
+		Y.z = 0;
+		Z.x = 0;
+		Z.y = 0;
+		Z.z = height;
 	}
-
+	Point getOrigin() {
+		return origin;
+	}
+	Vector getX() {
+		return X;
+	}
+	Vector getY() {
+		return Y;
+	}
+	Vector getZ() {
+		return Z;
+	}
+	bool intersectWithTriangle(Triangle triangle) {
+		if (intersectWithPoint(triangle.A) || intersectWithPoint(triangle.B) || intersectWithPoint(triangle.C))
+			return true;
+		return false;
+	}
+	bool intersectWithPoint(Point point) {
+		if (point.x >= origin.x && point.x <= origin.x + X.x && point.y >= origin.y && point.y <= origin.y + Y.y 
+			&& point.z >= origin.z && point.z <= origin.z + Z.z) {
+			return true;
+		}
+		return false;
+	}
 	void extendByTriangle() {
 
 	}
