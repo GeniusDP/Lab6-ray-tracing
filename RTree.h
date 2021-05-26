@@ -83,7 +83,7 @@ public:
 		if (node->children.size() > 0) {
 			if (node->parallelepiped.intersectWithLine(line)) {
 				for (int i = 0; i < node->children.size(); i++) {
-					traceRay(node->children[i], line);
+					traceRay(node->children[i], line, result);
 				}
 			}
 		}

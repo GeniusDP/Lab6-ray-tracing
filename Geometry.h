@@ -242,6 +242,11 @@ class Parallelepiped {
 	Vector X, Y, Z;
 	
 public:
+	Parallelepiped() : origin(Point(0, 0, 0)) {
+		X = Vector(0, 0, 0);
+		Y = Vector(0, 0, 0);
+		Z = Vector(0, 0, 0);
+	}
 	Parallelepiped(Point origin, double width, double length, double height):origin(origin) {
 		X.x = width;
 		X.y = 0;
@@ -298,7 +303,7 @@ public:
 		point3 = origin;
 		point3.z += Z.z;
 		point3.y += Y.y;
-		Plane plane(point1, point2, point3);
+		plane = Plane(point1, point2, point3);
 		if (intersectLineWithPlane(line, plane, intersect)) {
 			if (!(intersect.x >= point1.x && intersect.x <= point2.x && intersect.y >= point1.y && intersect.y <= point3.y))
 				return false;
@@ -309,7 +314,7 @@ public:
 		point2.y += Y.y;
 		point3 = origin;
 		point3.z += Z.z;
-		Plane plane(point1, point2, point3);
+		plane = Plane(point1, point2, point3);
 		if (intersectLineWithPlane(line, plane, intersect)) {
 			if (!(intersect.y >= point1.y && intersect.y <= point2.y && intersect.z >= point1.z && intersect.z <= point3.z))
 				return false;
@@ -323,7 +328,7 @@ public:
 		point3 = origin;
 		point3.x += X.x;
 		point3.z += Z.z;
-		Plane plane(point1, point2, point3);
+		plane = Plane(point1, point2, point3);
 		if (intersectLineWithPlane(line, plane, intersect)) {
 			if (!(intersect.y >= point1.y && intersect.y <= point2.y && intersect.z >= point1.z && intersect.z <= point3.z))
 				return false;
@@ -334,7 +339,7 @@ public:
 		point2.x += X.x;
 		point3 = origin;
 		point3.z += Z.z;
-		Plane plane(point1, point2, point3);
+		plane = Plane(point1, point2, point3);
 		if (intersectLineWithPlane(line, plane, intersect)) {
 			if (!(intersect.x >= point1.x && intersect.x <= point2.x && intersect.z >= point1.z && intersect.z <= point3.z))
 				return false;
@@ -348,7 +353,7 @@ public:
 		point3 = origin;
 		point3.y += Y.y;
 		point3.z += Z.z;
-		Plane plane(point1, point2, point3);
+		plane = Plane(point1, point2, point3);
 		if (intersectLineWithPlane(line, plane, intersect)) {
 			if (!(intersect.x >= point1.x && intersect.x <= point2.x && intersect.z >= point1.z && intersect.z <= point3.z))
 				return false;
