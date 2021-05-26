@@ -79,6 +79,21 @@ public:
 			removeNode(node->children[i]);
 		delete node;
 	}
+	void traceRay(Node* node, Line line, vector< Triangle& >& result) {
+		if (node->children.size() > 0) {
+			if (node->parallelepiped.intersectWithLine(line)) {
+				for (int i = 0; i < node->children.size(); i++) {
+					traceRay(node->children[i], line);
+				}
+			}
+		}
+		else {
+			Point point(0, 0, 0);
+			if (node->triangle.interSect(line, point)) {
+				result.push_back(node->triangle);
+			}
+		}
+	}
 
 	~RTree() {
 		removeNode(root);
