@@ -1,0 +1,16 @@
+﻿  main.cpp
+D:\Users\Bogdan\Desktop\RayTracing\Parser.h(13,20): warning C4018: <: несоответствие типов со знаком и без знака
+D:\Users\Bogdan\Desktop\RayTracing\Parser.h(27,11): warning C4018: <: несоответствие типов со знаком и без знака
+  The contents of <filesystem> are available only with C++17 or later.
+D:\Users\Bogdan\Desktop\RayTracing\RTree.h(71,22): warning C4018: <: несоответствие типов со знаком и без знака
+D:\Users\Bogdan\Desktop\RayTracing\RTree.h(85,22): warning C4018: <: несоответствие типов со знаком и без знака
+D:\Users\Bogdan\Desktop\RayTracing\RTree.h(90,21): warning C4018: <: несоответствие типов со знаком и без знака
+D:\Users\Bogdan\Desktop\RayTracing\RTree.h(97,23): warning C4018: <: несоответствие типов со знаком и без знака
+D:\Users\Bogdan\Desktop\RayTracing\Shield.h(58,20): warning C4018: <: несоответствие типов со знаком и без знака
+D:\Users\Bogdan\Desktop\RayTracing\Shield.h(59,21): warning C4018: <: несоответствие типов со знаком и без знака
+  Создание кода
+  1 of 478 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Создание кода завершено
+  RayTracing.vcxproj -> D:\Users\Bogdan\Desktop\RayTracing\Release\RayTracing.exe
