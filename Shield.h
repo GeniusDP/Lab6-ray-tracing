@@ -29,7 +29,7 @@ public:
 
 void Shield::trace(vector<Triangle>& trVec, Point camera) {
 	int cnt = 0;
-	RTree* tree = new RTree({ -100, -100, -100 }, 200, 200, 200);
+	RTree* tree = new RTree({ -50, -50, -50 }, 100, 100, 100);
 	for (auto tr : trVec)
 		tree->addNode(tree->getRoot(), tr);
 	for (int i = 0; i < m.size(); i++) {
@@ -58,7 +58,11 @@ void Shield::trace(vector<Triangle>& trVec, Point camera) {
 			Line line(curr, camera - curr);
 			Point crossPt;//point where line and triangle intercross
 			vector< Triangle > intersectedTriangles;
-			tree->traceRay(tree->getRoot(), line, intersectedTriangles);
+			int number = 0, triangles = 0;
+			tree->traceRay(tree->getRoot(), line, intersectedTriangles, number, triangles);
+			/*cout << "Number nodes: " << number;
+			cout << " Number triangles: " << triangles;
+			cout << " Number finded triangles: " << intersectedTriangles.size() << endl;*/
 			double minDist = 1e9;
 			Triangle totSamyi(Point(1e9, 1e9, 1e9), Point(1e9, 1e9, 1e9), Point(1e9, 1e9, 1e9));
 			for (auto tr : intersectedTriangles) {

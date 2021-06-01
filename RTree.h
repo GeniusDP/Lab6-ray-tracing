@@ -10,8 +10,8 @@ using namespace std;
 struct Node {
 	Parallelepiped parallelepiped;
 	vector<Node*> children;
-	Triangle triangle;
-	Node() : triangle(Triangle({ -1e9, -1e9 }, { -1e9, -1e9 }, { -1e9, -1e9 })) {}
+	vector<Triangle> triangles;
+	Node(){}
 };
 
 
@@ -22,7 +22,7 @@ public:
 	RTree(Point origin, double width, double lengthPow2, double height) {
 		root = new Node;
 		root->parallelepiped = Parallelepiped(origin, width, lengthPow2, height);
-		maxDepth = 4;
+		maxDepth = 3;
 		buildTree(root);
 	}
 	Node* getRoot() {
@@ -67,37 +67,35 @@ public:
 		}
 	}
 
-	void addNode(Node* node, Triangle& triangle, int d = 1) {
-		if (!node->parallelepiped.intersectWithTriangle(triangle))
-			return;
-		if (d == maxDepth + 1) {
-			Node* newNode = new Node;
-			newNode->triangle = triangle;
-			node->children.push_back(newNode);
+	bool addNode(Node* node, Triangle& triangle) {
+		if (!node->parallelepiped.includeTriangleInside(triangle))
+			return false;
+		bool flag = true;
+		for (int i = 0; i < node->children.size(); i++)
+			flag &= !addNode(node->children[i], triangle);
+		if (flag) {
+			node->triangles.push_back(triangle);
 		}
-		else {
-			for (int i = 0; i < node->children.size(); i++)
-				addNode(node->children[i], triangle, d + 1);
-		}
+		return true;
 	}
 	void removeNode(Node* node) {
 		for (int i = 0; i < node->children.size(); i++)
 			removeNode(node->children[i]);
 		delete node;
 	}
-	void traceRay(Node* node, Line& line, vector< Triangle >& result) {
-		if (node->children.size() > 0) {
-			if (node->parallelepiped.intersectWithLine(line)) {
-				for (int i = 0; i < node->children.size(); i++) {
-					traceRay(node->children[i], line, result);
-				}
+	void traceRay(Node* node, Line& line, vector< Triangle >& result, int& number, int& numberTriangles) {
+		number++;
+		if (!node->parallelepiped.intersectWithLine(line))
+			return;
+		Point point(0, 0, 0);
+		for (int i = 0; i < node->triangles.size(); i++) {
+			numberTriangles++;
+			if (node->triangles[i].interSect(line, point)) {
+				result.push_back(node->triangles[i]);
 			}
 		}
-		else {
-			Point point(0, 0, 0);
-			if (node->triangle.interSect(line, point)) {
-				result.push_back(node->triangle);
-			}
+		for (int i = 0; i < node->children.size(); i++) {
+			traceRay(node->children[i], line, result, number, numberTriangles);
 		}
 	}
 

@@ -209,6 +209,11 @@ public:
 			return true;
 		return false;
 	}
+	bool includeTriangleInside(Triangle& triangle) {
+		if (containsPoint(triangle.A) && containsPoint(triangle.B) && containsPoint(triangle.C))
+			return true;
+		return false;
+	}
 	bool containsPoint(Point& point) {
 		if (point.x >= origin.x && point.x <= origin.x + X.x && point.y >= origin.y && point.y <= origin.y + Y.y
 			&& point.z >= origin.z && point.z <= origin.z + Z.z) {
