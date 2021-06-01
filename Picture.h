@@ -39,13 +39,13 @@ struct BMP {
 
 #pragma pack(push, 1)
 struct PIXEL {
-    unsigned char B;
-    unsigned char G;
-    unsigned char R;
+    unsigned char B=0;
+    unsigned char G=0;
+    unsigned char R=0;
 };
 #pragma pack(pop)
 
-void printToPicture(vector<vector<char>>& matrix) {
+void printToPicture(vector<vector<double>>& matrix) {
     int width = matrix[0].size(), depth = matrix.size();
     BMP header;
 
