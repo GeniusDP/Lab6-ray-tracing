@@ -39,9 +39,9 @@ struct BMP {
 
 #pragma pack(push, 1)
 struct PIXEL {
-    unsigned char B=0;
-    unsigned char G=0;
-    unsigned char R=0;
+    unsigned char B=255;
+    unsigned char G=255;
+    unsigned char R=255;
 };
 #pragma pack(pop)
 
@@ -65,9 +65,9 @@ void printToPicture(vector<vector<double>>& matrix) {
     for (int i = 0; i < depth; i++) {
         for (int j = 0; j < width; j++) {
             PIXEL pixel;
-            pixel.R = int(double(matrix[i][j]) * double(255));
-            pixel.G = int(double(matrix[i][j]) * double(255));
-            pixel.B = int(double(matrix[i][j]) * double(255));
+            pixel.R = 255-int(double(matrix[i][j]) * double(255));
+            pixel.G = 255-int(double(matrix[i][j]) * double(255));
+            pixel.B = 255-int(double(matrix[i][j]) * double(255));
             out.write((char*)&(pixel), sizeof(PIXEL));
         }
         out.write(str, padding);
