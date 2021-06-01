@@ -4,11 +4,11 @@
 #include <iostream>
 #include <stdio.h>
 
+
 using namespace std;
 class Line;
 class Point;
 class Vector;
-class Shield;
 class Plane;
 class Triangle;
 
@@ -31,8 +31,8 @@ public:
 		this->y = y;
 		this->z = z;
 	}
-	double length() {
-		return sqrt(x * x + y * y + z * z);
+	double lengthPow2() {
+		return x * x + y * y + z * z;
 	}
 	friend double operator*(const Vector& a, const Vector& b) {
 		return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
@@ -81,7 +81,7 @@ public:
 	}
 };
 
-class Triangle: public Shape{
+class Triangle{
 private:
 	double s(Point A, Point B, Point C) {
 		double a = distEuclid(A, B);
@@ -100,7 +100,7 @@ public:
 		B = b;
 		C = c;
 	}
-	virtual bool interSect(Line line, Point& ptOfCrossing)override {
+	bool interSect(Line line, Point& ptOfCrossing){
 		// k * t = h
 		double k = this->plane.A * line.a.x + this->plane.B * line.a.y + this->plane.C * line.a.z;
 		if (fabs(k) < 1e-3) {
@@ -119,72 +119,6 @@ public:
 		return s(pt, A, B) + s(pt, A, C) + s(B, C, pt) - 1e-5 < s(C, A, B);
 	}
 };
-
-class Shield {
-	Point originPoint;
-	int originI, originJ;//center of the matrix
-	Plane plane;
-	vector<vector<char>> m;
-public:
-	Shield(Point originPoint, Plane plane, int size){
-		this->originPoint = originPoint;
-		originI = originJ = size / 2;
-		this->plane = plane;
-		m = vector<vector<char>>(size, vector<char>(size, '.'));
-	}
-	vector<vector<char>>& getM() {
-		return m;
-	}
-	void trace(vector<Triangle>&, Point camera);
-};
-
-void Shield::trace(vector<Triangle>& trVec, Point camera) {
-	const char* pixels = "WXwxoc-\0";
-	int cnt = 0;
-	for (int i = 0; i < m.size(); i++) {
-		for (int j = 0; j < m.size(); j++) {
-			Point curr;
-			if (plane.A == 0 && plane.B == 0) {
-				//z = -d;
-				//параллельно xOy
-				curr = Point(originPoint.x + (originI - i), originPoint.y + (originJ - j), originPoint.z);
-				//Point(originPoint.x + (originJ - j), originPoint.y, originPoint.z + (originI - i));
-			}else
-				if (plane.A == 0 && plane.C == 0) {
-					//y = -d;
-					//параллельно xOz
-					curr = Point(originPoint.x + (originJ - j), originPoint.y, originPoint.z + (originI - i));
-				}else
-					if (plane.B == 0 && plane.C == 0) {
-						//x = -d;
-						//параллельно zOy
-						curr = Point(originPoint.x, originPoint.y + (originJ - j), originPoint.z + (originI - i));
-					}
-
-
-			Line line(curr, camera-curr);
-			Point crossPt;//point where line and triangle intercross
-			double minDist = 1e9;
-			Triangle totSamyi(Point(1e9, 1e9, 1e9), Point(1e9, 1e9, 1e9), Point(1e9, 1e9, 1e9));
-			for (auto tr : trVec) {
-				if (tr.interSect(line, crossPt)) {
-					if (distEuclid(curr, crossPt) < minDist) {
-						minDist = distEuclid(curr, crossPt);
-						totSamyi = tr;
-					}
-				}
-			}
-			
-			if (minDist+100<1e9) {
-				cnt++;
-				double cosA = (line.a * totSamyi.plane.normal) / (line.a.length() * totSamyi.plane.normal.length());
-				cosA = fabs(cosA);
-				m[i][j] = int(cosA);//pixels[int(cosA * 6)];
-			}
-		}
-	}
-	cout << "cnt = " << cnt << endl;
-}
 
 class Circle: public Shape {
 private:
@@ -223,14 +157,174 @@ public:
 };
 
 
+
+
 class Parallelepiped {
+	Point origin;
+	Vector X;
+	Vector Y;
+	Vector Z;
 
 public:
-	Parallelepiped() {
-
+	bool intersectLineWithPlane(Line line, Plane plane, Point& point) {
+		double k = plane.A * line.a.x + plane.B * line.a.y + plane.C * line.a.z;
+		if (fabs(k) < 1e-3) {
+			return false;
+		}
+		double t = -(plane.A * line.p.x + plane.B * line.p.y + plane.C * line.p.z + plane.D) / k;
+		point = Point(line.p.x + line.a.x * t, line.p.y + line.a.y * t, line.p.z + line.a.z * t);
+		return true;
 	}
 
-	void extendByTriangle(Triangle tr) {
+	Parallelepiped() : origin(Point(0, 0, 0)) {
+		X = Vector(0, 0, 0);
+		Y = Vector(0, 0, 0);
+		Z = Vector(0, 0, 0);
+	}
+	Parallelepiped(Point origin, double width, double length, double height) :origin(origin) {
+		X.x = width;
+		X.y = 0;
+		X.z = 0;
+		Y.x = 0;
+		Y.y = length;
+		Y.z = 0;
+		Z.x = 0;
+		Z.y = 0;
+		Z.z = height;
+	}
+	Point getOrigin() {
+		return origin;
+	}
+	Vector getX() {
+		return X;
+	}
+	Vector getY() {
+		return Y;
+	}
+	Vector getZ() {
+		return Z;
+	}
+	bool intersectWithTriangle(Triangle& triangle) {
+		if (containsPoint(triangle.A) || containsPoint(triangle.B) || containsPoint(triangle.C))
+			return true;
+		return false;
+	}
+	bool containsPoint(Point& point) {
+		if (point.x >= origin.x && point.x <= origin.x + X.x && point.y >= origin.y && point.y <= origin.y + Y.y
+			&& point.z >= origin.z && point.z <= origin.z + Z.z) {
+			return true;
+		}
+		return false;
+	}
 
+	void extendByPoint(Point pt) {
+		if (origin.x < pt.x) {
+			X.x += fabs(origin.x - pt.x);
+		}
+		else {
+			origin.x = pt.x;
+			X.x += fabs(origin.x - pt.x);
+		}
+
+		if (origin.y < pt.y) {
+			Y.y += fabs(origin.y - pt.y);
+		}
+		else {
+			origin.y = pt.y;
+			Y.y += fabs(origin.y - pt.y);
+		}
+
+		if (origin.z < pt.z) {
+			Z.z += fabs(origin.z - pt.z);
+		}
+		else {
+			origin.z = pt.z;
+			Z.z += fabs(origin.z - pt.z);
+		}
+	}
+
+	void extendByTriangle(Triangle t) {
+		extendByPoint(t.A);
+		extendByPoint(t.B);
+		extendByPoint(t.C);
+	}
+
+	bool intersectWithLine(Line& line) {
+		Point point1, point2, point3, intersect;
+		point1 = origin;
+		point2 = origin;
+		point2.x += X.x;
+		point3 = origin;
+		point3.y += Y.y;
+		Plane plane(point1, point2, point3);
+		if (intersectLineWithPlane(line, plane, intersect)) {
+			if (intersect.x >= point1.x && intersect.x <= point2.x && intersect.y >= point1.y && intersect.y <= point3.y)
+				return true;
+		}
+
+		point1 = origin;
+		point1.z += Z.z;
+		point2 = origin;
+		point2.z += Z.z;
+		point2.x += X.x;
+		point3 = origin;
+		point3.z += Z.z;
+		point3.y += Y.y;
+		plane = Plane(point1, point2, point3);
+		if (intersectLineWithPlane(line, plane, intersect)) {
+			if (intersect.x >= point1.x && intersect.x <= point2.x && intersect.y >= point1.y && intersect.y <= point3.y)
+				return true;
+		}
+
+		point1 = origin;
+		point2 = origin;
+		point2.y += Y.y;
+		point3 = origin;
+		point3.z += Z.z;
+		plane = Plane(point1, point2, point3);
+		if (intersectLineWithPlane(line, plane, intersect)) {
+			if (intersect.y >= point1.y && intersect.y <= point2.y && intersect.z >= point1.z && intersect.z <= point3.z)
+				return true;
+		}
+
+		point1 = origin;
+		point1.x += X.x;
+		point2 = origin;
+		point2.x += X.x;
+		point2.y += Y.y;
+		point3 = origin;
+		point3.x += X.x;
+		point3.z += Z.z;
+		plane = Plane(point1, point2, point3);
+		if (intersectLineWithPlane(line, plane, intersect)) {
+			if (intersect.y >= point1.y && intersect.y <= point2.y && intersect.z >= point1.z && intersect.z <= point3.z)
+				return true;
+		}
+
+		point1 = origin;
+		point2 = origin;
+		point2.x += X.x;
+		point3 = origin;
+		point3.z += Z.z;
+		plane = Plane(point1, point2, point3);
+		if (intersectLineWithPlane(line, plane, intersect)) {
+			if (intersect.x >= point1.x && intersect.x <= point2.x && intersect.z >= point1.z && intersect.z <= point3.z)
+				return true;
+		}
+
+		point1 = origin;
+		point1.y += Y.y;
+		point2 = origin;
+		point2.y += Y.y;
+		point2.x += X.x;
+		point3 = origin;
+		point3.y += Y.y;
+		point3.z += Z.z;
+		plane = Plane(point1, point2, point3);
+		if (intersectLineWithPlane(line, plane, intersect)) {
+			if (intersect.x >= point1.x && intersect.x <= point2.x && intersect.z >= point1.z && intersect.z <= point3.z)
+				return true;
+		}
+		return false;
 	}
 };
