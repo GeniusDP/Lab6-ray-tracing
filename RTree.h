@@ -19,9 +19,15 @@ class RTree {
 	Node* root;
 	int maxDepth;
 public:
-	RTree(Point origin, double width, double lengthPow2, double height) {
+	RTree(Point origin, double width, double length, double height) {
 		root = new Node;
-		root->parallelepiped = Parallelepiped(origin, width, lengthPow2, height);
+		root->parallelepiped = Parallelepiped(origin, width, length, height);
+		maxDepth = 4;
+		buildTree(root);
+	}
+	RTree(Parallelepiped p) {
+		root = new Node;
+		root->parallelepiped = p;
 		maxDepth = 4;
 		buildTree(root);
 	}
