@@ -33,15 +33,15 @@ int main()
     */
     
  
-    int imageSize = 501;
+    int imageSize = 2001;
     //сбоку работает
     Point CAM(0, 100, 0);
-    Shield shield(Point(0, 400, 0), Plane(Point(100, 400, 0), Point(-100, 400, 0), Point(0, 400, 100)), imageSize);
+    Shield shield(Point(0, imageSize*0.8, 0), Plane(Point(100, imageSize * 0.8, 0), Point(-100, imageSize * 0.8, 0), Point(0, imageSize * 0.8, 100)), imageSize);
     
 
     Parser p("cow.obj");
     vector<Triangle> vec = p.parse();
-
+    
     shield.trace(vec, CAM);
     printToPicture(shield.getM());
 
