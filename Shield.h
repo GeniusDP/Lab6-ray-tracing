@@ -28,8 +28,31 @@ public:
 
 
 void Shield::trace(vector<Triangle>& trVec, Point camera) {
+	double minC = 1e9, maxC = -1e9;
+	for (auto t : trVec) {
+		minC = min(minC, t.A.x);
+		minC = min(minC, t.A.y);
+		minC = min(minC, t.A.z);
+		minC = min(minC, t.B.x);
+		minC = min(minC, t.B.y);
+		minC = min(minC, t.B.z);
+		minC = min(minC, t.C.x);
+		minC = min(minC, t.C.y);
+		minC = min(minC, t.C.z);
+
+		maxC = max(maxC, t.A.x);
+		maxC = max(maxC, t.A.y);
+		maxC = max(maxC, t.A.z);
+		maxC = max(maxC, t.B.x);
+		maxC = max(maxC, t.B.y);
+		maxC = max(maxC, t.B.z);
+		maxC = max(maxC, t.C.x);
+		maxC = max(maxC, t.C.y);
+		maxC = max(maxC, t.C.z);
+	}
 	int cnt = 0;
-	RTree* tree = new RTree({ -100, -100, -100 }, 200, 200, 200);
+	RTree* tree = new RTree({ minC, minC, minC }, 2*(maxC - minC), 2 *(maxC - minC), 2 *(maxC - minC));
+
 	for (auto tr : trVec)
 		tree->addNode(tree->getRoot(), tr);
 	for (int i = 0; i < m.size(); i++) {
@@ -60,26 +83,25 @@ void Shield::trace(vector<Triangle>& trVec, Point camera) {
 			vector< Triangle > intersectedTriangles;
 			tree->traceRay(tree->getRoot(), line, intersectedTriangles);
 			double minDist = 1e9;
-			Triangle totSamyi(Point(1e9, 1e9, 1e9), Point(1e9, 1e9, 1e9), Point(1e9, 1e9, 1e9));
+			Triangle theClosest(Point(1e9, 1e9, 1e9), Point(1e9, 1e9, 1e9), Point(1e9, 1e9, 1e9));
 			for (auto tr : intersectedTriangles) {
 				if (tr.interSect(line, crossPt)) {
 					if (distEuclid(curr, crossPt) < minDist) {
 						minDist = distEuclid(curr, crossPt);
-						totSamyi = tr;
+						theClosest = tr;
 					}
 				}
 			}
 
 			if (minDist + 100 < 1e9) {
 				cnt++;
-				double cosA = (line.a * totSamyi.plane.normal) / sqrt(line.a.lengthPow2() * totSamyi.plane.normal.lengthPow2());
+				double cosA = (line.a * theClosest.plane.normal) / sqrt(line.a.lengthPow2() * theClosest.plane.normal.lengthPow2());
 				cosA = fabs(cosA);
 				m[i][j] = cosA;
 			}
 		}
-		system("cls");
-		cout << "Complete: " << (i + 1) * 100 / m.size() << "%\n";
 	}
 	//delete tree;
-	cout << "cnt = " << cnt << endl;
+	//cout << "cnt = " << cnt << endl;
+	cout << "Solved!";
 }
