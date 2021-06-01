@@ -37,6 +37,9 @@ public:
 	friend double operator*(const Vector& a, const Vector& b) {
 		return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 	}
+	friend Vector operator-(const Vector& a, const Vector& b) {
+		return Vector(a.x-b.x, a.y-b.y, a.z-b.z);
+	}
 };
 
 class Point {
@@ -81,7 +84,7 @@ public:
 	}
 };
 
-class Triangle{
+class Triangle:public Shape{
 private:
 	double s(Point A, Point B, Point C) {
 		double a = distEuclid(A, B);
@@ -100,7 +103,7 @@ public:
 		B = b;
 		C = c;
 	}
-	bool interSect(Line line, Point& ptOfCrossing){
+	virtual bool interSect(Line line, Point& ptOfCrossing)override{
 		// k * t = h
 		double k = this->plane.A * line.a.x + this->plane.B * line.a.y + this->plane.C * line.a.z;
 		if (fabs(k) < 1e-3) {
@@ -216,30 +219,23 @@ public:
 		}
 		return false;
 	}
+	
+	bool containsTriangle(Triangle tr) {
+		return containsPoint(tr.A) && containsPoint(tr.B) && containsPoint(tr.C);
+	}
 
 	void extendByPoint(Point pt) {
-		if (origin.x < pt.x) {
-			X.x += fabs(origin.x - pt.x);
-		}
-		else {
+		X.x = max(X.x, fabs(origin.x - pt.x) + fabs(origin.x));
+		Y.y = max(Y.y, fabs(origin.y - pt.y) + fabs(origin.y));
+		Z.z = max(Z.z, fabs(origin.z - pt.z) + fabs(origin.z));
+		if (origin.x > pt.x) {
 			origin.x = pt.x;
-			X.x += fabs(origin.x - pt.x);
 		}
-
-		if (origin.y < pt.y) {
-			Y.y += fabs(origin.y - pt.y);
-		}
-		else {
+		if (origin.y > pt.y) {
 			origin.y = pt.y;
-			Y.y += fabs(origin.y - pt.y);
 		}
-
-		if (origin.z < pt.z) {
-			Z.z += fabs(origin.z - pt.z);
-		}
-		else {
+		if (origin.z > pt.z) {
 			origin.z = pt.z;
-			Z.z += fabs(origin.z - pt.z);
 		}
 	}
 
@@ -247,6 +243,12 @@ public:
 		extendByPoint(t.A);
 		extendByPoint(t.B);
 		extendByPoint(t.C);
+	}
+
+	double getExtentionAfterInsert(Triangle tr) {
+		Parallelepiped extended;
+		extended.extendByTriangle(tr);
+		return (this->getX() - extended.getX()).lengthPow2() + (this->getY() - extended.getY()).lengthPow2() + (this->getZ() - extended.getZ()).lengthPow2();
 	}
 
 	bool intersectWithLine(Line& line) {
