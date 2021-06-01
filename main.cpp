@@ -1,10 +1,10 @@
 ﻿#include <iostream>
 #include <vector>
 //#include "Geometry.h"
-#include "Shield.h"
 #include "Parser.h"
 #include <filesystem>
 #include "Picture.h"
+#include "Shield.h"
 
 using namespace std;
 int main()
