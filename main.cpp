@@ -4,6 +4,7 @@
 #include "Parser.h"
 #include <filesystem>
 #include "Picture.h"
+#include "Shield.h"
 
 using namespace std;
 int main()
@@ -31,27 +32,18 @@ int main()
     Shield shield(Point(0, 0, 200), Plane(Point(0, 0, 200), Point(-1, 1, 200), Point(3, -5, 200)), 121);
     */
     
-    
-    
+ 
+    int imageSize = 501;
     //сбоку работает
     Point CAM(0, 100, 0);
-    Shield shield(Point(0, 200, 0), Plane(Point(100, 200, 0), Point(-100, 200, 0), Point(0, 200, 100)), 121);
+    Shield shield(Point(0, 400, 0), Plane(Point(100, 400, 0), Point(-100, 400, 0), Point(0, 400, 100)), imageSize);
     
 
     Parser p("cow.obj");
     vector<Triangle> vec = p.parse();
 
     shield.trace(vec, CAM);
-    
     printToPicture(shield.getM());
-    /*FILE* filePtr;
-    freopen_s(&filePtr, "output.txt", "w", stdout);
-    //output
-    for (int i = shield.getM().size()-1; i >=0 ; i--) {
-        for (int j = shield.getM().size() - 1; j >= 0; j--)
-            cout << shield.getM()[i][j];
-        cout << endl;
-    }*/
 
     return 0;
 }
