@@ -16,8 +16,9 @@ int main()
     
     //спереди работает
     /*
+    int imageSize = 1001;
     Point CAM(100, 0, 0);
-    Shield shield(Point(200, 0, 0), Plane(Point(200, 0, 0), Point(200, 100, 0), Point(200, 0, 100)), 121);
+    Shield shield(Point(imageSize * 0.8, 0, 0), Plane(Point(imageSize * 0.8, 0, 0), Point(imageSize * 0.8, 100, 0), Point(imageSize * 0.8, 0, 100)), imageSize);
     */
     
     //сзади работает
@@ -33,11 +34,10 @@ int main()
     */
     
  
-    int imageSize = 2001;
+    int imageSize = 1001;
     //сбоку работает
     Point CAM(0, 100, 0);
     Shield shield(Point(0, imageSize*0.8, 0), Plane(Point(100, imageSize * 0.8, 0), Point(-100, imageSize * 0.8, 0), Point(0, imageSize * 0.8, 100)), imageSize);
-    
 
     Parser p("cow.obj");
     vector<Triangle> vec = p.parse();
