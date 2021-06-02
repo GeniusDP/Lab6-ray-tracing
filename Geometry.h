@@ -42,6 +42,8 @@ public:
 	}
 };
 
+#define PI 3.141592653589793238
+
 class Point {
 public:	
 	double x, y, z;
@@ -50,8 +52,21 @@ public:
 		this->y = y;
 		this->z = z;
 	}
+
 	friend Vector operator-(const Point& first, const Point& second){
 		return Vector(first.x-second.x, first.y - second.y, first.z - second.z);
+	}
+
+	void rotate(double arcX, double arcY, double arcZ) {
+		arcX = arcX * PI / 180;
+		arcY = arcY * PI / 180;
+		arcZ = arcZ * PI / 180;
+		//Oz
+		x = x * cos(arcZ) - y * sin(arcZ); y = x * sin(arcZ) + y * cos(arcZ); z = z;
+		//Ox
+		x = x; y = z * sin(arcX) + y * cos(arcX); z = z * cos(arcX) - y * sin(arcX);
+		//Oy
+		x = x * cos(arcY) - z * sin(arcY); y = y; z = x * sin(arcY) + z * cos(arcY);
 	}
 };
 

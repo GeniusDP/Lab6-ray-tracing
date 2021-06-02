@@ -51,7 +51,7 @@ void Shield::trace(vector<Triangle>& trVec, Point camera) {
 		maxC = max(maxC, t.C.z);
 	}
 	int cnt = 0;
-	RTree* tree = new RTree({ minC, minC, minC }, 2*(maxC - minC), 2 *(maxC - minC), 2 *(maxC - minC));
+	RTree* tree = new RTree({ -100, -100, -100 }, 200, 200, 200);
 
 	for (auto tr : trVec)
 		tree->addNode(tree->getRoot(), tr);

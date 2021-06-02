@@ -75,9 +75,37 @@ void printToPicture(vector<vector<double>>& matrix) {
     for (int i = 0; i < depth; i++) {
         for (int j = 0; j < width; j++) {
             PIXEL pixel;
-            pixel.R = 255-int(double(matrix[i][j]) * double(255));
-            pixel.G = 255-int(double(matrix[i][j]) * double(255));
-            pixel.B = 255-int(double(matrix[i][j]) * double(255));
+
+            if (matrix[i][j] == -5) {
+                //фон
+                pixel.R = 255;
+                pixel.G = 255;
+                pixel.B = 255;
+            }
+            else if (matrix[i][j] < 0.14) {
+                pixel.R = (unsigned char)255;
+                pixel.G = (unsigned char)0;
+                pixel.B = (unsigned char)0;
+            }
+            else if (matrix[i][j] < 0.28) {
+                pixel = { (unsigned char)255, (unsigned char)87, (unsigned char)15 };
+            }
+            else if (matrix[i][j] < 0.42) {
+                pixel = { (unsigned char)255, (unsigned char)220, (unsigned char)0 };
+            }
+            else if (matrix[i][j] < 0.55) {
+                pixel = { (unsigned char)30, (unsigned char)255, (unsigned char)40 };
+            }
+            else if (matrix[i][j] < 0.70) {
+                pixel = { (unsigned char)45, (unsigned char)255, (unsigned char)255 };
+            }
+            else if (matrix[i][j] < 0.84) {
+                pixel = { (unsigned char)30, (unsigned char)40, (unsigned char)255 };
+            }
+            else if (matrix[i][j] <= 1) {
+                pixel = { (unsigned char)255, (unsigned char)40, (unsigned char)255 };
+            }
+
             out.write((char*)&(pixel), sizeof(PIXEL));
         }
         out.write(str, padding);
