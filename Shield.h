@@ -18,7 +18,7 @@ public:
 		this->originPoint = originPoint;
 		originI = originJ = size / 2;
 		this->plane = plane;
-		m = vector<vector<double>>(size, vector<double>(size, 0));
+		m = vector<vector<double>>(size, vector<double>(size, -5));
 	}
 	vector<vector<double>>& getM() {
 		return m;

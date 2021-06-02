@@ -33,15 +33,17 @@ int main()
     Shield shield(Point(0, 0, 200), Plane(Point(0, 0, 200), Point(-1, 1, 200), Point(3, -5, 200)), 121);
     */
     
- 
+    
     int imageSize = 1001;
+    cout << "Enter image size, please(bigger than 150): "; cin >> imageSize;
     //сбоку работает
     Point CAM(0, 100, 0);
-    Shield shield(Point(0, imageSize*0.8, 0), Plane(Point(100, imageSize * 0.8, 0), Point(-100, imageSize * 0.8, 0), Point(0, imageSize * 0.8, 100)), imageSize);
+    Shield shield(Point(0, imageSize*0.9, 0), Plane(Point(100, imageSize * 0.9, 0), Point(-100, imageSize * 0.9, 0), Point(0, imageSize * 0.9, 100)), imageSize);
 
     Parser p("cow.obj");
+    cout << "Parsing..." << endl;
     vector<Triangle> vec = p.parse();
-    
+    cout << "Tracing..." << endl;
     shield.trace(vec, CAM);
     printToPicture(shield.getM());
 

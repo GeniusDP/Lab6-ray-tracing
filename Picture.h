@@ -39,9 +39,19 @@ struct BMP {
 
 #pragma pack(push, 1)
 struct PIXEL {
-    unsigned char B=255;
-    unsigned char G=255;
-    unsigned char R=255;
+    unsigned char B = 255;
+    unsigned char G = 255;
+    unsigned char R = 255;
+    PIXEL() {
+        B = 255;
+        G = 255;
+        R = 255;
+    }
+    PIXEL(unsigned char r, unsigned char g, unsigned char b) {
+        R = r;
+        B = b;
+        G = g;
+    }
 };
 #pragma pack(pop)
 
@@ -74,3 +84,28 @@ void printToPicture(vector<vector<double>>& matrix) {
     }
     out.close();
 }
+/*
+0 - красный (255, 0, 0)
+1 - оранжевый (255, 87, 15)
+2 - жёлтый (255, 220, 0)
+3 - зелёный (30, 255, 40)
+4 - голубой (45, 255, 255)
+5 - синий (30, 40, 255)
+6 - фиолетовый (255, 40, 255)
+*/
+
+/*
+0.0-0.3 - синий
+0.3-0.5 - красный
+0.5-0.7 - зеленый
+0.7-1 - mix
+*/
+
+
+/*
+                //y = |x-a|
+                pixel.R = int(fabs(double(matrix[i][j]-0.5)) * double(255));//128 - int(double(matrix[i][j]-0.5) * double(128));
+                pixel.G = 0.75 * int(double(matrix[i][j]) * double(255));
+                pixel.B = 0.5 * int(double(matrix[i][j]) * double(255));
+
+*/
