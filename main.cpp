@@ -35,17 +35,25 @@ int main()
     
     
     int imageSize = 1001;
-    cout << "Enter image size, please(bigger than 150): "; cin >> imageSize;
+    //cout << "Enter image size, please(bigger than 150): "; cin >> imageSize;
     //сбоку работает
     Point CAM(0, 100, 0);
     Shield shield(Point(0, imageSize*0.9, 0), Plane(Point(100, imageSize * 0.9, 0), Point(-100, imageSize * 0.9, 0), Point(0, imageSize * 0.9, 100)), imageSize);
 
     Parser p("cow.obj");
     cout << "Parsing..." << endl;
-    vector<Triangle> vec = p.parse();
+    vector<Triangle> vec = p.parse(30, -21, 15);
     cout << "Tracing..." << endl;
     shield.trace(vec, CAM);
     printToPicture(shield.getM());
-
+    
+    /*Point test(1, 2, 3);
+    //вокруг Оz на 90 градусов
+    Point next = Point(test.x * cos(3.14159 / 2) - test.y * sin(3.14159 / 2), test.x * sin(3.14159 /2) + test.y * cos(3.14159 /2), test.z);//1, test.x*sin(3.14/4) + test.y*cos(3.14/4), test.z * sin(3.14 / 4) - test.z * cos(3.14 / 4)
+    //вокруг Оx на 90 градусов
+    Point next = Point(test.x, test.z * sin(3.1415962 / 4) + test.y * cos(3.1415962 / 4), test.z * cos(3.1415962 / 4) - test.y * sin(3.1415962 / 4));//1, test.x*sin(3.14/4) + test.y*cos(3.14/4), test.z * sin(3.14 / 4) - test.z * cos(3.14 / 4)
+    
+    //вокруг Оy на 90 градусов
+    Point next = Point(test.x * cos(3.14159 / 2) - test.z * sin(3.14159 / 2), test.y, test.x * sin(3.1415962 / 2) + test.z * cos(3.1415962 / 2));*/
     return 0;
 }
